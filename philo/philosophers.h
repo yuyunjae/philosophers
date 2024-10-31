@@ -6,7 +6,7 @@
 /*   By: yuyu <yuyu@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 18:56:47 by yuyu              #+#    #+#             */
-/*   Updated: 2024/10/28 21:24:13 by yuyu             ###   ########.fr       */
+/*   Updated: 2024/10/31 21:01:11 by yuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,21 @@
 # include <sys/time.h>
 # include <pthread.h>
 # include <memory.h>
+# include <stdbool.h>
 
 typedef struct	s_env
 {
 	int				philo_num;
-	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
+	long long		time_to_die;
+	long long		time_to_eat;
+	long long		time_to_sleep;
 	int				must_eat_count;
 	int 			check_is_end; // 0 -> live, 1 -> die
-	int				*fork_arr;
+	bool			*fork_arr;  // 아직 이거 설정 안함.
 	pthread_mutex_t	print_mutex;
 	pthread_mutex_t	env_mutex;
 	pthread_mutex_t	*fork_mutex;
+	pthread_mutex_t	*philo_mutex; // 아직 미완 (먹은 시간 접근 시....)
 } t_env;
 // &env->fork_mutex == &(env->fork_mutex) != (&env)->fork_mutex
 
@@ -40,6 +42,7 @@ typedef struct	s_philo
 	int			philo_id; // 1부터 ~
 	int			eat_count;
 	long long	eat_time; // ms
+	// long long	cur_time; // ms
 	t_env		*env; // env 접근 가능
 	pthread_t	thread_id;
 } t_philo;

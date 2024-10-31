@@ -6,7 +6,7 @@
 /*   By: yuyu <yuyu@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 18:56:54 by yuyu              #+#    #+#             */
-/*   Updated: 2024/10/28 21:26:17 by yuyu             ###   ########.fr       */
+/*   Updated: 2024/10/31 21:10:57 by yuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,16 +70,77 @@ int env_setting(int argc, char **argv, char **envp, t_env *env)
 
 // int	eat_time(t_philo *philo)
 // {
-//		philo->eat_time = return_time
+// 		philo->eat_time = return_time
 // }
+
+void	ft_usleep(t_philo *philo, long long sleep_time)
+{
+	long long s_time;
+
+	s_time = return_time();
+	if (check_end(philo->env))
+			return ;
+	while (s_time + sleep_time > return_time())
+	{
+		if (check_end(philo->env))
+			return ;
+		usleep(100);
+	}
+}
+
+int	ft_eat(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->env->fork_mutex[philo->philo_id]); // 왼쪽
+	if (check_end(philo->env))
+	{
+		pthread_mutex_unlock(&philo->env->fork_mutex[philo->philo_id]);
+		return (1);
+	}
+	pthread_mutex_lock(&philo->env->fork_mutex[(philo->philo_id + 1) % philo->env->philo_num]); // 오른쪽
+	philo->eat_time = return_time();
+	println(philo->env, philo->eat_time, philo->philo_id, "is eating");
+	ft_usleep(philo, philo->env->time_to_eat);
+	pthread_mutex_unlock(&philo->env->fork_mutex[(philo->philo_id + 1) % philo->env->philo_num]);
+	pthread_mutex_unlock(&philo->env->fork_mutex[philo->philo_id]);
+	return (check_end(philo->env));
+}
 
 int thread_do(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->env->env_mutex);
-	if (eat_time(philo))
-		return (1);
 	pthread_mutex_unlock(&philo->env->env_mutex);
-	struct timeval a;
+	philo->eat_time = return_time();
+	if (check_end(philo->env))
+		return (3);
+	if (philo->philo_id % 2 == 0)
+		ft_usleep(philo, philo->env->time_to_eat);
+	else if (philo->env->philo_num % 2 && philo->philo_id == philo->env->philo_num)
+		ft_usleep(philo, philo->env->time_to_eat * 2);
+	while (!check_die(philo)) // if not die // 이거 생각 더해보기 모니터 있으면 굳이 싶긴하잖아~
+	{
+		if (ft_eat(philo)) // eating
+			return (1);
+		println(philo->env, return_time(), philo->philo_id, "is sleeping");
+		ft_usleep(philo, philo->env->time_to_sleep); // sleeping
+		if (check_end(philo->env))
+			return (2);
+		println(philo->env, return_time(), philo->philo_id, "is thinking");
+	}
+	return (0); // end at thinking
+}
+
+void	free_thread(t_env *env, t_philo	*philo)
+{
+	int	index;
+
+	index = -1;
+	while (++index < env->philo_num)
+		pthread_join(philo[index].thread_id, NULL);
+}
+
+void	monitoring(t_env *env, t_philo *philo)
+{
+	//
 }
 
 int	philo(t_env *env)
@@ -96,11 +157,14 @@ int	philo(t_env *env)
 	while(++i < env->philo_num)
 	{
 		philo[i].env = env;
+		philo[i].philo_id = i + 1;
 		pthread_create(philo[i].thread_id, NULL, thread_do, &philo[i]);
 	}
 	pthread_mutex_unlock(&env->env_mutex);
+	// monitoring(env, philo);
 	// thread join으로 기다려야 할듯?
-	// + free해줄거 해주기.
+	free_thread(env, philo);
+	// free_all(env, philo); // + free해줄거 해주기.
 	return (0);
 }
 
