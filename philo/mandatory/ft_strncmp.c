@@ -1,34 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc.c                                        :+:      :+:    :+:   */
+/*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yuyu <yuyu@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/28 19:07:19 by yuyu              #+#    #+#             */
-/*   Updated: 2024/10/28 19:13:39 by yuyu             ###   ########.fr       */
+/*   Created: 2024/11/07 18:40:06 by yuyu              #+#    #+#             */
+/*   Updated: 2024/11/07 18:42:29 by yuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	*ft_calloc(size_t count, size_t size)
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	char	*str;
-	size_t	total;
+	size_t	i;
 
-	total = count * size;
-	if (size != 0 && ((size_t)(total / size) != count))
+	i = 0;
+	if (n == 0)
 		return (0);
-	if (total == 0)
-		str = (char *)malloc(total + 1);
-	else
-		str = (char *)malloc(total);
-	if (!str)
+	while (*s1 && *s2 && *s1 == *s2 && i < n)
+	{
+		s1++;
+		s2++;
+		i++;
+	}
+	if (i == n)
 		return (0);
-	if (!total)
-		memset(str, 0, 1);
-	else
-		memset(str, 0, total);
-	return (str);
+	return ((unsigned char)*s1 - (unsigned char)*s2);
 }

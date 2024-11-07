@@ -6,7 +6,7 @@
 /*   By: yuyu <yuyu@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 18:56:39 by yuyu              #+#    #+#             */
-/*   Updated: 2024/10/28 18:57:52 by yuyu             ###   ########.fr       */
+/*   Updated: 2024/11/07 17:20:53 by yuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,18 @@ static int	ft_isspace(char c)
 	return (0);
 }
 
+static int	ft_isdigit(char c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
+}
+
 static unsigned long	ft_strtol(char *str, int sign)
 {
-	unsigned long   i;
-	unsigned long   ans;
-	unsigned long   before;
+	unsigned long	i;
+	unsigned long	ans;
+	unsigned long	before;
 
 	i = 0;
 	ans = 0;

@@ -6,19 +6,29 @@
 /*   By: yuyu <yuyu@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 19:26:49 by yuyu              #+#    #+#             */
-/*   Updated: 2024/10/31 20:27:50 by yuyu             ###   ########.fr       */
+/*   Updated: 2024/11/07 19:23:58 by yuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	println(t_env *env, long long cur_time, int id, char *str)
+void	println(t_philo *philo, int id, char *str)
 {
-	if (check_end(env))
+	long long	cur_time;
+
+	pthread_mutex_lock(&philo->env->print_mutex);
+	cur_time = return_time(philo->env);
+	if (check_end(philo->env))
+	{
+		pthread_mutex_unlock(&philo->env->print_mutex);
 		return ;
-	pthread_mutex_lock(&env->print_mutex);
-	printf("%lld %d %s\n", cur_time, id, str);
-	pthread_mutex_unlock(&env->print_mutex);
+	}
+	printf("%lld %d %s\n", cur_time - philo->env->start_time, id, str);
+	if (!strncmp(str, "is eating", 10))
+		philo->eat_time = cur_time;
+	else if (!strncmp(str, "died", 5))
+		change_check_end(philo->env);
+	pthread_mutex_unlock(&philo->env->print_mutex);
 }
 
 void	change_check_end(t_env *env)
@@ -28,7 +38,7 @@ void	change_check_end(t_env *env)
 	pthread_mutex_unlock(&env->env_mutex);
 }
 
-int		check_end(t_env *env)
+int	check_end(t_env *env)
 {
 	pthread_mutex_lock(&env->env_mutex);
 	if (env->check_is_end)
@@ -40,17 +50,14 @@ int		check_end(t_env *env)
 	return (0);
 }
 
-long long return_time(t_philo *philo)
+long long	return_time(t_env *env)
 {
 	struct timeval	cur_time;
 
-	if (gettimeofday(&cur_time, NULL) != 0)
-		return ((long long)cur_time.tv_sec * 1000 + (long long)(cur_time.tv_usec / 1000));
-	pthread_mutex_lock(&philo->env->print_mutex);
-	if (!check_end(philo->env))
-		write(2, "gettimeofday error!\n", 20);
-	change_check_end(philo->env);
-	pthread_mutex_unlock(&philo->env->print_mutex);
+	if (gettimeofday(&cur_time, NULL) == 0)
+		return ((long long)cur_time.tv_sec * 1000
+			+ (long long)(cur_time.tv_usec / 1000));
+	change_check_end(env);
 	return (-1);
 }
 
@@ -58,13 +65,12 @@ int	check_die(t_philo *philo)
 {
 	long long	cur_time;
 
-	cur_time = return_time(philo);
-	if (check_end(philo->env))  // 이미 끝났다면
+	cur_time = return_time(philo->env);
+	if (check_end(philo->env))
 		return (1);
 	if (philo->env->time_to_die < cur_time - philo->eat_time)
 	{
-		change_check_end(philo->env);
-		println(philo->env, cur_time, philo->philo_id, "died");
+		println(philo, philo->id, "died");
 		return (1);
 	}
 	return (0);
