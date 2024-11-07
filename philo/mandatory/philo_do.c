@@ -6,7 +6,7 @@
 /*   By: yuyu <yuyu@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 16:30:46 by yuyu              #+#    #+#             */
-/*   Updated: 2024/11/07 22:49:23 by yuyu             ###   ########.fr       */
+/*   Updated: 2024/11/07 23:16:37 by yuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	ft_sleep(t_philo *philo, long long sleep_time)
 			return (1);
 		usleep(100);
 	}
-	// printf("time %d %lld\n", philo->id,return_time(philo->env) - philo->env->start_time);
 	return (0);
 }
 

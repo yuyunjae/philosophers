@@ -6,7 +6,7 @@
 /*   By: yuyu <yuyu@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 18:56:47 by yuyu              #+#    #+#             */
-/*   Updated: 2024/11/07 22:57:31 by yuyu             ###   ########.fr       */
+/*   Updated: 2024/11/07 23:12:10 by yuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,9 @@
 # include <pthread.h>
 # include <memory.h>
 # include <stdbool.h>
+
+// 철학자가 한명일 때 처리하기
+// must_eat다먹었을 때 종료 처리하기
 
 typedef struct s_env
 {
