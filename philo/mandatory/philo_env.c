@@ -6,7 +6,7 @@
 /*   By: yuyu <yuyu@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:24:39 by yuyu              #+#    #+#             */
-/*   Updated: 2024/11/07 22:57:32 by yuyu             ###   ########.fr       */
+/*   Updated: 2024/11/08 18:54:41 by yuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ int	env_setting(int argc, char **argv, char **envp, t_env *env)
 	env->time_to_eat = ft_atoi(argv[3]);
 	env->time_to_sleep = ft_atoi(argv[4]);
 	env->must_eat_count = -1;
+	env->must_eat_remain = env->philo_num;
 	if (argc == 6)
 		env->must_eat_count = ft_atoi(argv[5]);
 	else

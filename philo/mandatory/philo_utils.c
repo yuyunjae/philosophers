@@ -6,7 +6,7 @@
 /*   By: yuyu <yuyu@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 19:26:49 by yuyu              #+#    #+#             */
-/*   Updated: 2024/11/07 19:23:58 by yuyu             ###   ########.fr       */
+/*   Updated: 2024/11/08 22:35:32 by yuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,11 @@ void	println(t_philo *philo, int id, char *str)
 		return ;
 	}
 	printf("%lld %d %s\n", cur_time - philo->env->start_time, id, str);
-	if (!strncmp(str, "is eating", 10))
-		philo->eat_time = cur_time;
-	else if (!strncmp(str, "died", 5))
+	if (!ft_strncmp(str, "died", 5))
 		change_check_end(philo->env);
 	pthread_mutex_unlock(&philo->env->print_mutex);
+	if (!ft_strncmp(str, "is eating", 10))
+		philo->eat_time = cur_time;
 }
 
 void	change_check_end(t_env *env)

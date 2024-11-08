@@ -6,7 +6,7 @@
 /*   By: yuyu <yuyu@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 18:56:47 by yuyu              #+#    #+#             */
-/*   Updated: 2024/11/07 23:12:10 by yuyu             ###   ########.fr       */
+/*   Updated: 2024/11/08 22:00:33 by yuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,6 @@
 # include <memory.h>
 # include <stdbool.h>
 
-// 철학자가 한명일 때 처리하기
-// must_eat다먹었을 때 종료 처리하기
-
 typedef struct s_env
 {
 	int				philo_num;
@@ -31,7 +28,8 @@ typedef struct s_env
 	long long		time_to_eat;
 	long long		time_to_sleep;
 	long long		start_time;
-	int				must_eat_count; // 미완
+	int				must_eat_remain;
+	int				must_eat_count;
 	int				check_is_end;
 	bool			*fork_arr;
 	pthread_mutex_t	print_mutex;
@@ -51,11 +49,11 @@ typedef struct s_philo
 }	t_philo;
 
 //--------------------------- philo.c ---------------------------//
+int			ft_sleep(t_philo *philo, long long sleep_time);
 void		*thread_do(void *arg);
 int			philo(t_env *env);
 
 //--------------------------- philo_do.c ---------------------------//
-int			ft_sleep(t_philo *philo, long long sleep_time);
 int			ft_eat(t_philo *philo);
 
 //--------------------------- philo_env.c ---------------------------//
