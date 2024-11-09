@@ -6,7 +6,7 @@
 /*   By: yuyu <yuyu@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 16:30:09 by yuyu              #+#    #+#             */
-/*   Updated: 2024/11/09 18:00:36 by yuyu             ###   ########.fr       */
+/*   Updated: 2024/11/09 21:26:28 by yuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,12 @@ static int	thread_init(t_philo *philo)
 	return (0);
 }
 
-static void	free_thread(t_env *env, t_philo	*philo)
+static void	free_thread(t_philo	*philo, int max_index)
 {
 	int	index;
 
 	index = -1;
-	while (++index < env->philo_num)
+	while (++index < max_index)
 		pthread_join(philo[index].thread_id, NULL);
 }
 
@@ -80,11 +80,16 @@ int	philo(t_env *env)
 	{
 		philo[i].env = env;
 		philo[i].id = i + 1;
-		pthread_create(&philo[i].thread_id, NULL, thread_do, &philo[i]);
-	env->start_time = return_time(env);
+		if (pthread_create(&philo[i].thread_id, NULL,
+				thread_do, &philo[i]) != 0)
+		{
+			change_check_end(env);
+			break ;
+		}
 	}
+	env->start_time = return_time(env);
 	pthread_mutex_unlock(&env->start_mutex);
-	free_thread(env, philo);
+	free_thread(philo, i);
 	free(philo);
 	return (0);
 }

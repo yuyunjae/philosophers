@@ -1,6 +1,6 @@
 NAME = philo
 CC = cc
-CFLAG = -Wall -Wextra -Werror #-g -fsanitize=thread
+CFLAG = -Wall -Wextra -Werror # -lpthread # -g -fsanitize=thread
 HEADERS = philosophers.h
 SRCS_DIR = mandatory
 SRCS = main.c	\
