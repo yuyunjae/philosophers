@@ -6,7 +6,7 @@
 /*   By: yuyu <yuyu@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 16:30:46 by yuyu              #+#    #+#             */
-/*   Updated: 2024/11/08 22:05:57 by yuyu             ###   ########.fr       */
+/*   Updated: 2024/11/09 18:02:28 by yuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ static int	get_one_fork(t_philo *philo, int fork_index)
 
 static int	get_fork(t_philo *philo, int left_fork, int right_fork)
 {
+	if (philo->id % 2 == 0)
+		swap_fork(&left_fork, &right_fork);
 	while (!get_one_fork(philo, left_fork))
 	{
 		if (check_die(philo))

@@ -7,6 +7,7 @@ SRCS = main.c	\
 		ft_atoi.c	\
 		ft_strncmp.c	\
 		philo_do.c	\
+		philo_end.c	\
 		philo_env.c	\
 		philo_utils.c	\
 		philo.c

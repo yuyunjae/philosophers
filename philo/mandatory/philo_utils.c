@@ -6,11 +6,40 @@
 /*   By: yuyu <yuyu@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 19:26:49 by yuyu              #+#    #+#             */
-/*   Updated: 2024/11/08 22:35:32 by yuyu             ###   ########.fr       */
+/*   Updated: 2024/11/09 18:02:39 by yuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+
+void	swap_fork(int *left_fork, int *right_fork)
+{
+	int	temp;
+
+	temp = *left_fork;
+	*left_fork = *right_fork;
+	*right_fork = temp;
+}
+
+int	ft_sleep(t_philo *philo, long long sleep_time)
+{
+	long long	s_time;
+	long long	c_time;
+
+	s_time = return_time(philo->env);
+	while (1)
+	{
+		c_time = return_time(philo->env);
+		if (check_die(philo))
+			return (1);
+		if (c_time - s_time >= sleep_time)
+			break ;
+		else if (c_time - s_time + 4 < sleep_time)
+			usleep(2000);
+		usleep(100);
+	}
+	return (0);
+}
 
 void	println(t_philo *philo, int id, char *str)
 {
@@ -31,25 +60,6 @@ void	println(t_philo *philo, int id, char *str)
 		philo->eat_time = cur_time;
 }
 
-void	change_check_end(t_env *env)
-{
-	pthread_mutex_lock(&env->env_mutex);
-	env->check_is_end = 1;
-	pthread_mutex_unlock(&env->env_mutex);
-}
-
-int	check_end(t_env *env)
-{
-	pthread_mutex_lock(&env->env_mutex);
-	if (env->check_is_end)
-	{
-		pthread_mutex_unlock(&env->env_mutex);
-		return (1);
-	}
-	pthread_mutex_unlock(&env->env_mutex);
-	return (0);
-}
-
 long long	return_time(t_env *env)
 {
 	struct timeval	cur_time;
@@ -59,19 +69,4 @@ long long	return_time(t_env *env)
 			+ (long long)(cur_time.tv_usec / 1000));
 	change_check_end(env);
 	return (-1);
-}
-
-int	check_die(t_philo *philo)
-{
-	long long	cur_time;
-
-	cur_time = return_time(philo->env);
-	if (check_end(philo->env))
-		return (1);
-	if (philo->env->time_to_die < cur_time - philo->eat_time)
-	{
-		println(philo, philo->id, "died");
-		return (1);
-	}
-	return (0);
 }

@@ -6,29 +6,11 @@
 /*   By: yuyu <yuyu@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 16:30:09 by yuyu              #+#    #+#             */
-/*   Updated: 2024/11/09 16:12:47 by yuyu             ###   ########.fr       */
+/*   Updated: 2024/11/09 18:00:36 by yuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
-int	ft_sleep(t_philo *philo, long long sleep_time)
-{
-	long long	s_time;
-	long long	c_time;
-
-	s_time = return_time(philo->env);
-	while (1)
-	{
-		c_time = return_time(philo->env);
-		if (check_die(philo))
-			return (1);
-		if (c_time - s_time >= sleep_time)
-			break ;
-		usleep(100);
-	}
-	return (0);
-}
 
 static int	thread_init(t_philo *philo)
 {
@@ -78,6 +60,7 @@ void	*thread_do(void *arg)
 		if (ft_sleep(philo, philo->env->time_to_sleep))
 			return (0);
 		println(philo, philo->id, "is thinking");
+		usleep(200);
 	}
 	return (0);
 }

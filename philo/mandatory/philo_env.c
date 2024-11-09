@@ -6,7 +6,7 @@
 /*   By: yuyu <yuyu@student.42seoul.kr>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/07 15:24:39 by yuyu              #+#    #+#             */
-/*   Updated: 2024/11/08 18:54:41 by yuyu             ###   ########.fr       */
+/*   Updated: 2024/11/09 17:01:18 by yuyu             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,21 +64,34 @@ static int	make_mutex(t_env *env)
 	return (0);
 }
 
-int	env_setting(int argc, char **argv, char **envp, t_env *env)
+static int	argv_setting(int argc, char **argv, t_env *env)
 {
-	int	return_index;
-
-	memset(env, 0, sizeof(t_env));
 	env->philo_num = ft_atoi(argv[1]);
 	env->time_to_die = ft_atoi(argv[2]);
 	env->time_to_eat = ft_atoi(argv[3]);
 	env->time_to_sleep = ft_atoi(argv[4]);
-	env->must_eat_count = -1;
 	env->must_eat_remain = env->philo_num;
 	if (argc == 6)
+	{
 		env->must_eat_count = ft_atoi(argv[5]);
+		if (env->must_eat_count < 0)
+			return (1);
+	}
 	else
 		env->must_eat_count = -1;
+	if (env->philo_num <= 0 || env->time_to_die < 0
+		|| env->time_to_eat < 0 || env->time_to_sleep < 0)
+		return (1);
+	return (0);
+}
+
+int	env_setting(int argc, char **argv, t_env *env)
+{
+	int	return_index;
+
+	memset(env, 0, sizeof(t_env));
+	if (argv_setting(argc, argv, env))
+		return (1);
 	env->fork_arr = (bool *)malloc(sizeof(bool) * env->philo_num);
 	if (!env->fork_arr)
 		return (1);
